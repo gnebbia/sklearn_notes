@@ -20,15 +20,40 @@ from sklearn.cluster import KMeans, AgglomerativeClustering, AffinityPropagation
 from sklearn.mixture import GaussianMixture #For GMM clustering
 from sklearn.datasets import load_iris
 from sklearn.manifold import TSNE
+from sklearn.clu
+
+
+sum_of_squared_distances = []
+K = range(1,15)
+for k in K:
+    km = KMeans(n_clusters=k)
+    km = km.fit(X)
+    sum_of_squared_distances.append(km.inertia_)
+
+plot(list(K), sum_of_squared_distances)
 
 X_embedded = TSNE(n_components=2, n_iter=5000).fit_transform(X)
 X_embedded.shape
 
 scatter(X_embedded[:,0], X_embedded[:,1], c=labels)
 
+Nc = range(1, 20)
+kmeans = [KMeans(n_clusters=i) for i in Nc]
+kmeans
+score = [kmeans[i].fit(X).score(X) for i in range(len(kmeans))]
+
+plot(list(Nc), score)
+
 iris = load_iris()
+X = iris.data
 c=y_data
 
+
+# PCA
+pca = PCA().fit(X)
+plt.plot(np.cumsum(pca.explained_variance_ratio_))
+plt.xlabel('number of components')
+plt.ylabel('cumulative explained variance');
 
 X= iris.data
 
