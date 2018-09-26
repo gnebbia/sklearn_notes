@@ -505,7 +505,6 @@ X_embedded = MDS(n_components=2, max_iter=100, n_init=1).fit_transform(X)
 
 # We plot data
 scatter(X_embedded[:,0], X_embedded[:,1], c=labels)
-```
-
+``` 
 
 

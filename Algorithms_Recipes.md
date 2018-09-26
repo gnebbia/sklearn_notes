@@ -1,7 +1,3 @@
-
-
-
-
 ## Decision Trees
 
 * Decision trees tend to overfit on data with a large number of features. Getting the right ratio of samples to number of features is important, 
@@ -82,15 +78,3 @@ problems, since the dimensionality reduction applied will have as output
 a number of features smaller than the number of output outcomes which are
 possible.
 
-
-
-## Clustering
-
-Evaluation Techniques:
-* Elbow method
-* Silhoutte Score
-
-Visualization:
-* Parallel Coordinates
-* Biplot on the principale components
-* Clusters statistics and distributions
