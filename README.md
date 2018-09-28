@@ -188,7 +188,13 @@ print(np.sqrt(metrics.mean_squared_error(y_validation, y_pred)))
 # and test on the testing set
 ```
 
+### Support Vector Machines for Regression
 
+TODO
+
+### Random Forest Regressor
+
+TODO
 
 ### KNN 
 
@@ -213,6 +219,9 @@ knn.fit(X_train, y_train)
 
 # predict the response for new observations
 y_pred = knn.predict(X_validation)
+
+# print probabilities
+y_pred_probs = knn.predict_proba(X_validation)
 
 
 # measure performance: Accuracy
@@ -485,4 +494,6 @@ plt.xlabel("Number of cluster")
 plt.ylabel("SSE")
 plt.show()
 ```
+
+
 

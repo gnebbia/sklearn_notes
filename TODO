@@ -1,3 +1,7 @@
-# Insert data Scaling, what's the difference with different kinds of scaling
+# Precision and Recall Curves
+# Talk about feature selection and ranking
+# Outlier detection
+# Density Estimation
+# Anomaly Detection
 # Insert notes about other algorithms
-# ROC Curve to choose a classifier
+# OneVsAll vs OneVsOne

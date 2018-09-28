@@ -5,11 +5,28 @@
 
 ### PCA
 
+PCA can be useful in scenarios where we have high dimensional datasets
+and want to reduce the size of the dataset by performing feature selection.
+Indeed feature selection will help us learning faster and better in some cases.
+This signal preserving/noise filtering property makes PCA a very useful feature
+selection routine for example, rather than training a classifier on very
+high-dimensional data,  you  might instead train the classifier on the lower
+dimensional representation, which will automatically serve to filter 
+out random noise in the inputs.
+
 ```python
 pca = PCA(n_components=2)
+# Fit the model with X
 pca.fit(X)
+
 print(pca.explained_variance_)
 print(pca.components_)
+# Apply dimensionality reduction to X
+X_reduced = pca.transform(X)
+
+# We can uncompress, this is for example used in noise reduction
+# techniques
+X_uncompressed = pca.inverse_transform(X_reduced)
 
 
 ## Plot the cumulative explained variance as function of number of components
@@ -19,6 +36,21 @@ plt.xlabel('number of components')
 plt.ylabel('cumulative explained variance');
 ```
 
+We can also innstantiate PCA by specifying the amount of variance we want to be
+explained instead of the number of components, let's see an example:
+
+```python
+# Instantiate PCA with 50% of variance explained, this
+# is also useful in noise removal operations
+pca = PCA(0.50).fit(X)
+print(pca.n_components_)
+
+# Noise removal
+components = pca.transform(X)
+filtered = pca.inverse_transform(components)
+```
+
+
 ## Clustering Algorithms
 
 Clustering is the grouping of objects together so that objects belonging in 
@@ -26,7 +58,7 @@ the same group (cluster) are more similar to each other than those in
 other groups (clusters). 
 
 Also for what concerns unsupervised learning in general, it is a good idea to
-scale/normalize data.
+apply standardization to data.
 
 
 ### K-Means
@@ -414,16 +446,54 @@ print("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, labels))
 ```
 
 
-## Dimensionality Reduction to Visualize Data
+## Manifold Learning to Visualize High Dimensional Data
 
-We can use the following techniques to:
+
+We have seen how principal component analysis can be used in the dimensionality
+reduction task—reducing the number of features of a dataset while maintaining the
+essential relationships between the points. While PCA is flexible, fast, and easily
+interpretable, it does not perform so well when there are nonlinear relationships 
+within the data.
+
+
+To address this deficiency, we can turn to a class of methods known as 
+manifold learning a class of unsupervised estimators that seeks to describe datasets as 
+lowdimensional manifolds embedded in high-dimensional spaces. 
+
+Manifold learning is an approach to non-linear dimensionality reduction.
+Algorithms for this task are based on the idea that the dimensionality of 
+many data sets is only artificially high.
+
+
+Manifold Learning pros/cons:
+
+* manifold learning is weaker with respect to missing data
+* noise in data in manifold learning can drastically change the embedding
+* there is not quantitative way to choose optimal number of neighbors in manifold learning
+* in manifold learning the globally optimal number of dimensions is difficult to determine,
+    in contrast PCA let us find the output dimension based on the explained variance
+* in manifold learning, the meaning of the embedded dimensions is not always clear,
+    while in PCA they have a clear meaning
+
+
+We can use the techniques explained in this section to:
+
 * Visualize data
 * Visualize data to infer clusters
 * Visualize clustering, once it is finished, 
 
 Generally for this purpose common options are:
-* t-SNE, which exaggerates clusters
-* MDS, tries to preserve the original data structure
+* PCA, performs poorly in visualization, but for not so highly dimensional data
+    is a good choice, since it has the concept of explained variance and axes
+    have a meaning
+* MDS, tries to preserve the original data structure, but it is not robust
+    agains nonlinear highly dimensional transformations
+* LLE, is an improvement with respect to MDS for what concerns nonlinear transformations,
+    but instead of preserving the distance between each pair of points in the dataset,
+    it just preserves the distances between neighboring points
+* Isomap, this generally leads to better result with respect to LLE
+* t-SNE, which exaggerates clusters, works very well but it is much slower with
+    respect to other methods
 
 
 Generally it may be a good idea to use both techniques.
@@ -490,6 +560,9 @@ scatter(X_embedded[:,0], X_embedded[:,1], c=labels)
 
 ### Multi Dimensional Scaling (MDS)
 
+MDS works well when data is not characterized by non linear transformations,
+such as rotations, shiftings and so on.
+
 ```python
 from sklearn.cluster import DBSCAN
 from sklearn.manifold import MDS
@@ -505,6 +578,31 @@ X_embedded = MDS(n_components=2, max_iter=100, n_init=1).fit_transform(X)
 
 # We plot data
 scatter(X_embedded[:,0], X_embedded[:,1], c=labels)
-``` 
+```
+
+### Local Linear Embedding (LLE)
+
+```python
+from sklearn.manifold import LocallyLinearEmbedding
+
+# The 'modified' version of LLE performs generally better than the classical LLE
+model = LocallyLinearEmbedding(n_neighbors = 100, n_components = 2, method = 'modified', eigen_solver='dense')
+
+out = model.fit_transform(X)
+```
+
+### Isomap
+
+```python
+from sklearn.manifold import Isomap
+
+data = mnist.data[::30]
+target = mnist.target[::30]
+
+model = Isomap(n_components =2)
+proj = model.fit_transform(faces .data)
+
+plt.scatter(proj[:, 0], proj[:, 1], c=target, cmap=plt.cm.get_cmap('jet', 10))
+```
 
 
