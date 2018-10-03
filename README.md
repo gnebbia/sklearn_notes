@@ -355,6 +355,10 @@ y_pred = rf.predict(X_test)
 We can inspect feature importance:
 ```python
 print(rf.feature_importances_)
+# Or plotting them
+plt.plot(rf.feature_importances_)
+plt.xticks(np.arange(X.shape[1]), X.columns.tolist(), rotation=90);
+
 ```
 
 

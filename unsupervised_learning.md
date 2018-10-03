@@ -14,6 +14,22 @@ high-dimensional data,  you  might instead train the classifier on the lower
 dimensional representation, which will automatically serve to filter 
 out random noise in the inputs.
 
+Lastly, it is best not to apply PCA to raw counts (word counts, music play counts,
+movie viewing counts, etc.). 
+The reason for this is that such counts often contain large outliers. 
+(The probability is pretty high that there is a fan out there who watched
+The Star Wards 201,582 times, which is can be considered an outlier with respect the 
+rest of the counts.) since PCA looks for linear correlations within the features. 
+Correlation and variance statistics are very sensitive to large outliers; a 
+single large number could change the statistics a lot. So, it is a good 
+idea to first trim the data of large values or apply a scaling transform like tf-idf 
+or the log transform.
+
+When seen as a method for eliminating linear correlation, PCA is related to the con‐
+cept of whitening. Its cousin, ZCA, whitens the data in an interpretable way, but does
+not reduce dimensionality.
+
+
 ```python
 pca = PCA(n_components=2)
 # Fit the model with X
