@@ -31,6 +31,10 @@ not reduce dimensionality.
 
 
 ```python
+from sklearn.preprocessing import StandardScaler
+
+X = StandardScaler().fit_transform(ds)
+
 pca = PCA(n_components=2)
 # Fit the model with X
 pca.fit(X)
@@ -80,6 +84,10 @@ apply standardization to data.
 ### K-Means
 
 ```python
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+
+X = StandardScaler().fit_transform(ds)
 # number of clusters
 nclust = 3 
 model = KMeans(nclust)
@@ -120,6 +128,9 @@ algorithm’s performance.
 
 
 ```python
+from sklearn.preprocessing import StandardScaler
+
+X = StandardScaler().fit_transform(ds)
 model = AgglomerativeClustering(affinity = 'euclidean', linkage = 'ward')
 clust_labels1 = model.fit_predict(X)
 ```
@@ -142,6 +153,9 @@ the normalized Laplacian. When it comes to image clustering,
 Spectral clustering works quite well.
 
 ```python
+from sklearn.preprocessing import StandardScaler
+
+X = StandardScaler().fit_transform(ds)
 nclust = 3
 model = SpectralClustering(n_clusters=nclust, affinity="precomputed", n_init=200))
 clust_labels = model.fit_predict(X)
@@ -162,6 +176,9 @@ identifying regulated transcripts
 
 
 ```python
+from sklearn.preprocessing import StandardScaler
+
+X = StandardScaler().fit_transform(ds)
 model = AffinityPropagation(damping = 0.5, max_iter = 250, affinity = 'euclidean')
 model.fit(X)
 clust_labels2 = model.predict(X)
@@ -176,6 +193,9 @@ The clusters are formed based on the Gaussian distribution of the centers.
 
 
 ```python
+from sklearn.preprocessing import StandardScaler
+
+X = StandardScaler().fit_transform(ds)
 model = GaussianMixture(n_components=nclust,init_params='kmeans')
 model.fit(X)
 clust_labels = model.predict(X)
@@ -183,13 +203,40 @@ clust_labels = model.predict(X)
 
 ### DBSCAN
 
+It is a density-based clustering algorithm: given a set of points in some space,
+it groups together points that are closely packed together (points with many
+nearby neighbors), marking as outliers points that lie alone in low-density
+regions (whose nearest neighbors are too far away). DBSCAN is one of the most
+common clustering algorithms and also most cited in scientific literature.
+
+The DBSCAN algorithm basically requires 2 parameters:
+* eps:  the minimum distance between two points. It means that if the distance
+    between two points is lower or equal to this value (eps), these points are
+    considered neighbors. Generally it is preferred to have this parameter quite
+    low
+* minPoints: the minimum number of points to form a dense region. For example,
+    if we set the minPoints parameter as 5, then we need at least 5 points to
+    form a dense region. Generally a rule of thumb for this parameter is to have
+    it can be derived from a number of dimensions (D) in the data set, as
+    minPoints `>= D + 1`. Larger values are usually better for data sets with noise
+    and will form more significant clusters. The minimum value for the minPoints
+    must be 3, but the larger the data set, the larger the minPoints value that
+    should be chosen.
+
+
 ```python
 from sklearn.cluster import DBSCAN
+from sklearn.preprocessing import StandardScaler
 
+X = StandardScaler().fit_transform(ds)
 db = DBSCAN(eps=0.3, min_samples=10)
 db.fit(X)
 labels = db.labels_
+
+# Number of clusters in labels, ignoring noise, that is '-1' if present.
+n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
 ```
+
 
 ## OPTICS
 
@@ -204,6 +251,9 @@ different choices of thresholds in DBSCAN.
 
 ```python
 from sklearn.cluster import OPTICS
+from sklearn.preprocessing import StandardScaler
+
+X = StandardScaler().fit_transform(ds)
 
 clust = OPTICS(min_samples=9, rejection_ratio=0.5)
 clust.fit(X)
@@ -268,6 +318,10 @@ In this method As k increases, the sum of squared distance tends to zero.
 Imagine we set k to its maximum value n (where n is number of samples) each sample will 
 form its own cluster meaning sum of squared distances equals zero.
 
+Inertia is related to the well known concept of cost/loss function in a classification algorithm 
+and is calculated as the sum of squared distance for each point to it's closest centroid, 
+i.e., its assigned cluster. 
+
 ```python
 import matplotlib.pyplot as plt
 
@@ -278,10 +332,10 @@ for k in K:
     km = km.fit(X)
     sum_of_squared_distances.append(km.inertia_)
 
-plt.plot(k, sum_of_squared_distances, '-o')
+plt.plot(K, sum_of_squared_distances, '-o')
 plt.xlabel('number of clusters, k')
 plt.ylabel('inertia')
-plt.xticks(ks)
+plt.xticks(list(K))
 plt.show()
 ```
 
@@ -328,6 +382,9 @@ def elbow(df, n):
 
 ```python
 from sklearn import metrics
+from sklearn.preprocessing import StandardScaler
+
+X = StandardScaler().fit_transform(ds)
 kmeans_model = KMeans(n_clusters=3, random_state=1).fit(X)
 labels = kmeans_model.labels_
 metrics.silhouette_score(X, labels, metric='euclidean')
@@ -346,6 +403,9 @@ where a higher Calinski-Harabaz score relates to a model with better defined clu
 
 ```python
 from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+
+X = StandardScaler().fit_transform(ds)
 
 kmeans_model = KMeans(n_clusters=3, random_state=1).fit(X)
 labels = kmeans_model.labels_
@@ -378,6 +438,9 @@ index relates to a model with better separation between the clusters.
 
 ```python
 from sklearn.metrics import davies_bouldin_score
+from sklearn.preprocessing import StandardScaler
+
+X = StandardScaler().fit_transform(ds)
 kmeans = KMeans(n_clusters=3, random_state=1).fit(X)
 labels = kmeans.labels_
 davies_bouldin_score(X, labels)
@@ -560,6 +623,9 @@ plots with different perplexities.
 ```python
 from sklearn.cluster import DBSCAN
 from sklearn.manifold import TSNE
+from sklearn.preprocessing import StandardScaler
+
+X = StandardScaler().fit_transform(ds)
 
 # We apply some sort of clustering on data X
 db = DBSCAN(eps=0.3, min_samples=5)
@@ -582,6 +648,9 @@ such as rotations, shiftings and so on.
 ```python
 from sklearn.cluster import DBSCAN
 from sklearn.manifold import MDS
+from sklearn.preprocessing import StandardScaler
+
+X = StandardScaler().fit_transform(ds)
 
 # We apply some sort of clustering on data X
 db = DBSCAN(eps=0.3, min_samples=5)
@@ -611,6 +680,9 @@ out = model.fit_transform(X)
 
 ```python
 from sklearn.manifold import Isomap
+from sklearn.preprocessing import StandardScaler
+
+X = StandardScaler().fit_transform(ds)
 
 data = mnist.data[::30]
 target = mnist.target[::30]
@@ -622,3 +694,10 @@ plt.scatter(proj[:, 0], proj[:, 1], c=target, cmap=plt.cm.get_cmap('jet', 10))
 ```
 
 
+## Appendix A: Understanding the important features in clustering
+
+In order to understand the important features during clustering, we can perform
+the clustering and then treat it as a classification problem where the cluster
+assignment will be the target, at this point we can use all the techniques that
+are available for supervised learning feature selection to understand the
+importance, such as random forest feature selection or mutual information and so on.

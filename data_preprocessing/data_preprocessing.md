@@ -1,7 +1,7 @@
 # Data Preprocessing
 
 * Before scaling it is a good idea to remove outliers usually.
-* In regression problems we should also scale targets (outputs)
+* In many problems we should also scale targets (outputs)
 
 First, some definitions. "Rescaling" a vector means to add or subtract a
 constant and then multiply or divide by a constant, as you would do to

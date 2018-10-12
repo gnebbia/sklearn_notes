@@ -339,6 +339,8 @@ Of course the best way to encode categorical variables is to use models which do
 not need any encoding and can deal naturally with categorical variables such as
 tree based models.
 
+For tree based models, label encoding and frequency encoding are helpful.
+For non tree based models, one hot encoding is used frequently.
 
 
 ### Categorical Features Tricks
@@ -602,6 +604,34 @@ Common Ensemble methods are:
 * Stacking
 * Stacknet
 
+
+Here is a short description of Bagging, Boosting and Stacking three methods:
+
+* Bagging (stands for Bootstrap Aggregating) is a way to decrease the variance
+  of your prediction by generating additional data for training from your
+  original dataset using combinations with repetitions to produce multisets of
+  the same cardinality/size as your original data. By increasing the size of
+  your training set you can't improve the model predictive force, but just
+  decrease the variance, narrowly tuning the prediction to expected outcome.
+
+* Boosting is a two-step approach, where one first uses subsets of the
+  original data to produce a series of averagely performing models and
+  then "boosts" their performance by combining them together using a
+  particular cost function (=majority vote). Unlike bagging, in the
+  classical boosting the subset creation is not random and depends upon
+  the performance of the previous models: every new subsets contains the
+  elements that were (likely to be) misclassified by previous models.
+
+* Stacking is a similar to boosting: you also apply several models to
+  your original data. The difference here is, however, that you don't
+  have just an empirical formula for your weight function, rather you
+  introduce a meta-level and use another model/approach to estimate
+  the input together with outputs of every model to estimate the
+  weights or, in other words, to determine what models perform well
+  and what badly given these input data.
+
+
+
 ### Averaging
 
 We just take the average in the prediction probabilities given by two or more
@@ -794,6 +824,7 @@ differentiation of some of the models, but in this case we use model stacking
 
 
 ## Tips for Ensemble Methods
+
 
 A list of tips we can use with ensemble methods:
 
