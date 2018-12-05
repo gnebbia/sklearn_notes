@@ -32,8 +32,14 @@ not reduce dimensionality.
 
 ```python
 from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 
-X = StandardScaler().fit_transform(ds)
+ds = pd.read_csv("file.csv")
+
+feature_names = list(ds)
+scaler = StandardScaler().fit(ds)
+X = pd.DataFrame(scaler.transform(ds), columns=feature_names) 
+
 
 pca = PCA(n_components=2)
 # Fit the model with X
@@ -41,8 +47,12 @@ pca.fit(X)
 
 print(pca.explained_variance_)
 print(pca.components_)
+
 # Apply dimensionality reduction to X
 X_reduced = pca.transform(X)
+component_names = ["PC_" + str(i) for i in range(1, num_components+1)]
+ds_pca = pd.DataFrame(X_reduced, columns=component_names)
+
 
 # We can uncompress, this is for example used in noise reduction
 # techniques
@@ -70,6 +80,30 @@ components = pca.transform(X)
 filtered = pca.inverse_transform(components)
 ```
 
+### PCA and Scaling
+
+If the raw data is used principal component analysis will tend to give more
+emphasis to those variables that have higher variances than to those variables
+that have very low variances. In effect the results of the analysis will depend
+on what units of measurement are used to measure each variable. That would imply
+that a principal component analysis should only be used with the raw data if all
+variables have the same units of measure. And even in this case, only if you
+wish to give those variables which have higher variances more weight in the
+analysis.
+
+For example, the two variables of your data-set might be having same units of
+measurement and may lie  loosely in the range of 0-255 or whatever. But if one
+of the variable always has values in range 100-255 and the other one in between
+1-10 for all the records , PCA will automatically give more weight to the first
+variable. For this reason standardization is required, not only centering.
+
+The other reason comes from the computational requirements, which might  not be
+relevant here, if  most of your variables take  higher order values like
+13456789  and on top of that you are using 10 million records of data for PCA ,
+then its highly likely that your program will crash out of memory or will take
+forever to complete.
+Reference: Tibshirani book: Introduction to Statistical Learning,
+paragraph 10.2.3 on page 380.
 
 ## Clustering Algorithms
 
@@ -84,19 +118,36 @@ apply standardization to data.
 ### K-Means
 
 ```python
+import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
+from sklearn.datasets import make_blobs
 
+# We generate a dataset, discarding labels
+ds, _ = make_blobs(n_samples=3000, centers=3, n_features=2, random_state=0)
+
+# Standard Scaling of Data
 X = StandardScaler().fit_transform(ds)
-# number of clusters
+
+# Setting of K-Means algorithm with 3 clusters
 nclust = 3 
 model = KMeans(nclust)
 model.fit(X)
+
+# Assign cluster label to each points
 labels = model.predict(X)
+
+# Store cluster centroids
 centroids = model.cluster_centers_
 centroids_x = centroids[:,0]
 centroids_y = centroids[:,1]
+
+# Plot clusters with different colors
+plt.scatter(X[:, 0], X[:, 1], marker='o', c=labels, s=25, edgecolor='k')
+plt.scatter(centroids_x, centroids_y, marker='X', s=200)
+plt.show()
 ```
+
 
 ```python
 # When plotting centroids we can do
@@ -136,7 +187,6 @@ clust_labels1 = model.fit_predict(X)
 ```
 
 Anyway we can also help it by providing the number of clusters in this way:
-
 ```python
 nclust = 3
 model = AgglomerativeClustering(n_clusters=nclust, affinity = 'euclidean', linkage = 'ward')
@@ -186,7 +236,7 @@ cent = model.cluster_centers_
 ```
 
 
-### Gaussian Modeling
+### Gaussian Mixture Modeling
 
 It is probabilistic based clustering or kernel density estimation based clusterig.
 The clusters are formed based on the Gaussian distribution of the centers. 
@@ -266,8 +316,13 @@ labels = clust.labels_[clust.ordering_]
 Generally metrics which can be used to evaluate clustering techniques
 can be subdivided into:
 
-* Internal Evalutaion
-* External Evaluation
+* Internal Evaluation (Intrinsic), it is useful in and of itself
+    * helps understand the makeup of our data
+* External Evaluation (Extrinsic), so we use clustering to help us solve another
+    problem, the applications are:
+    * used to represent for example data with cluster features
+    * to train different classifiers for each sub-population
+    * identify and eliminate outliers/corrupted points
 
 
 ### Internal Evaluation for Clustering
@@ -396,7 +451,7 @@ metrics.silhouette_score(X, labels, metric='euclidean')
 * Drawbacks
     * The Silhouette Coefficient is generally higher for convex clusters than other concepts of clusters, such as density based clusters like those obtained through DBSCAN.
 
-#### Calinski-Harabaz Index
+#### Calinski-Harabasz Index
 
 The Calinski-Harabaz index also known as the Variance Ratio Criterion - can be used to evaluate the model, 
 where a higher Calinski-Harabaz score relates to a model with better defined clusters.
@@ -464,6 +519,7 @@ evaluate our clustering algorithms:
 * Fowlkes–Mallows Index
 * Adjusted Rand Score (ARS) 
 * Normalized Mutual Information (NMI)
+* Other metrics generally used by classification procedures
 
 
 In external evaluation, clustering results are evaluated based on data that was not 
