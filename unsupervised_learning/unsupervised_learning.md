@@ -117,6 +117,43 @@ apply standardization to data.
 
 ### K-Means
 
+There are different implementations of the k-Means algorithm, the most famous
+ones are:
+
+* Lloyd/Forgy: which are basically the same, it's just the in the Forgy version
+    the distribution of data is considered continuous and we must infer the
+    distribution the data is following, but basically the algorithm is this one:
+        * take num_clusters centers in some way:
+            * randomly in R^d space
+            * taking random data points from the dataset
+            * using the farthest observations in the dataset
+            * using kmeans++ (smarter choice)
+        * compute the euclidean distances between centroids and data points and
+            then assign points to clusters according to the minimum euclidean
+            distance
+        * repeat the last step until centroids don't change anymore or until a
+            certain tolerance is reached in terms of sum of squared distances
+            within clusters to the cluster centers
+* MacQueen: it is identical to the Forgy version but cluster centers are updated
+    also everytime there is a cluster change
+* Hartigan-Wong: Similar to MacQueen in the sense that we update cluster centers
+    more frequently (also at each cluster change) but instead of using the
+    euclidean distance to perform cluster assignments we use the total
+    within-cluster sum of squares. But centroids are still calculated as the
+    mean of data points.
+
+The sklearn implementation by default uses the Lloyd version of the algorithm,
+and uses kmeans++ as a technique to initialize centroids. Kmeans++ strategy can
+be summarized in the following steps:
+
+1. Choose one center uniformly at random from among the data points.
+2. For each data point x, compute D(x), the distance between x and the nearest 
+    center that has already been chosen.
+3. Choose one new data point at random as a new center, using a weighted probability 
+    distribution where a point x is chosen with probability proportional to D(x)^2.
+4. Repeat Steps 2 and 3 until k centers have been chosen.
+5. Now that the initial centers have been chosen, proceed using standard k-means clustering.
+
 ```python
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans

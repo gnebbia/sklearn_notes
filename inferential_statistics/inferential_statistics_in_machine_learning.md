@@ -219,3 +219,30 @@ for i in range(ds.shape[1]):
 
 print(pvalues)
 ```
+
+
+## Tests on Variance (Homoscedasticity and Heteroscedasticity)
+
+Certain tests (e.g. ANOVA) require that the variances of different populations
+are equal. This can be determined by the following approaches:
+
+Comparison of graphs (esp. box plots)
+Comparison of variance, standard deviation and IQR statistics
+Statistical tests
+
+The F test presented in Two Sample Hypothesis Testing of Variances
+can be used to determine whether the variances of two populations
+are equal. For three or more variables the following statistical
+tests for homogeneity of variances are commonly used:
+
+* Bartlett’s test, for normal distributions
+* Levene’s test, for not strictly normal distributions
+* Fligner Killeen test, nonparametric tests
+
+Levene's test is an alternative to the Bartlett test. The Levene test is less
+sensitive than the Bartlett test to departures from normality. If you have
+strong evidence that your data do in fact come from a normal, or nearly normal,
+distribution, then Bartlett's test has better performance. 
+The Fligner Killeen test is a non-parametric test for homogeneity of group
+variances based on ranks. It is useful when the data is non-normal or where
+there are outliers. We present the median-centering version of this test.

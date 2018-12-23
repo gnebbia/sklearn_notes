@@ -73,7 +73,7 @@ Binning can be done in generally two ways, each with some variations:
 For what concerns binning there are different strategies, we can bin with a
 fixed width and choose the spacing linearly or custom (e.g., ages to represent
 phases of life). Or a better idea with data spanning multiple order of
-magnitudes is to group by powerd of 10, so a bin will be 0-9, another 
+magnitudes is to group by power of 10, so a bin will be 0-9, another 
 10-99, then 100-999 and so on.  And to map from the count variable to the 
 bin, we take the log10 of the count.
 In general each bin contains a specific numeric range. The ranges can be custom
@@ -134,7 +134,12 @@ Examples are:
 * ANOVA is similar to LDA, but operates using categorical features to check
     whether the means of the different classes are equal, it analyzes the
     differences between means
-* Chi-Square, is used to determine if a subset data matches a population,
+* To compare a categorical variable with a continuous variable we can perform 
+  One-way ANOVA test: we calculate in-group variance and intra-group variance 
+  and then compare them.
+  I think the last two are the same thing
+* Chi-Square statistical test, (measures independence between categorical variables by using
+    a contingency table) is used to determine if a subset data matches a population,
     Chi-square is used to test if the relationship of a dependent variable is
     significant to an independent variable. Imagine you have a model trying to
     predict if a person will buy or not buy an item. If you have a variable for
@@ -144,7 +149,32 @@ Examples are:
     test to evaluate whether a predictor is significant to a target variable
     based on the expected vs observered value. You often have a threshold to
     select the top x amount based on the statistical result.
-
+* Cramer's V (or Cramer's phi) is an index of correlation between two categorical
+    variables based on the chi square statistical test, giving a value between 0
+    and +1 (inclusive), Cramér's V varies from 0 (corresponding to no
+    association between the variables) to 1 (complete association) and can reach
+    1 only when the two variables are equal to each other. 
+    In the case of a 2 × 2 contingency table Cramér's V is equal to the Phi
+    coefficient. 
+* Tschuprow similar to Cramer's V, since it is based on Chi-square
+* Mean Square Contingency
+* Maung, all of these coefficients can be viewed on the clustering book by Gan,
+    Ma and Wu at page 102
+* Variance of a feature, this is one of th simplest ways to perform feature
+    selection. The trick here is to check how much is the variance of a 
+    feature, for example features who have 0 variance are useless,
+    we can for example filter out features who have a variance 
+     an example, suppose that we have a dataset with boolean features, and we
+     want to remove all features that are either one or zero (on or off) in more
+     than 80% of the samples. Boolean features are Bernoulli random variables,
+     and the variance of such variables is given by
+     Var[X] = p(1 - p), in python we can filter that with:
+```python
+from sklearn.feature_selection import VarianceThreshold
+X = [[0, 0, 1], [0, 1, 0], [1, 0, 0], [0, 1, 1], [0, 1, 0], [0, 1, 1]]
+sel = VarianceThreshold(threshold=(.8 * (1 - .8)))
+sel.fit_transform(X)
+```
 
 Disadvantages of feature selection is related to the fact that they do not take
 into account interactions between features, apparently useless features can be
@@ -266,7 +296,9 @@ For encoding a categorical variable with few levels we can use:
 * One-Hot Encoding, introduces a linear combination, so the model lose interpretability, 
     since we can have multiple models as a solution, anyway it is a simple solution,
     and also having an additional combination allows us to have an extra category that we
-    can use for missing data
+    can use for missing data, this can create a lot of features if we have a lot of categories,
+    in these cases a technique which may work is the application of a dimensionality reduction
+    technique such as PCA after the encoding, to reduce the number of features
 * Dummy Encoding, we solve the problem of linear combinations by dropping one of the 
     categories, so we have a unique model and it is interpretable, but lose the extra
     category that could be used for missing or unspecified data, dummy encoding
