@@ -1,5 +1,23 @@
 # Inferential Statistics that can be useful in ML
 
+
+## Note about p-values
+
+The interpretation of the pvalue may follow two ways:
+
+* **Neyman-Pearson** decision making framework. does not give an additional meaning
+  to pvalue other than setting a threshold and telling if we can either reject
+  or accept the null hypothesis
+* **Fisher** interpretation instead, allows us to compare two p-values and allows us
+  to say that in the case of a pvalue of 0.9 we are more confident in not being
+  able to reject the null hypothesis with respect to a pvalue of 0.6
+
+
+It's a bit messy. In practice, they appear to be used simultaneously. But
+everyone implicitly claims to use Neyman-Pearson, while interpreting p-values
+as some sort of strength-of-evidence.
+
+
 ## How is Inferential Statistics used in Machine Learning
 
 It is a good practice to gather a population of results when comparing multiple
@@ -246,3 +264,6 @@ distribution, then Bartlett's test has better performance.
 The Fligner Killeen test is a non-parametric test for homogeneity of group
 variances based on ranks. It is useful when the data is non-normal or where
 there are outliers. We present the median-centering version of this test.
+
+
+

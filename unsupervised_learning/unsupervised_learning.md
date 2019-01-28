@@ -142,6 +142,7 @@ ones are:
     within-cluster sum of squares. But centroids are still calculated as the
     mean of data points.
 
+#### How does kmeans++ work?
 The sklearn implementation by default uses the Lloyd version of the algorithm,
 and uses kmeans++ as a technique to initialize centroids. Kmeans++ strategy can
 be summarized in the following steps:
