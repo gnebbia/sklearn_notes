@@ -120,7 +120,7 @@ apply standardization to data.
 There are different implementations of the k-Means algorithm, the most famous
 ones are:
 
-* Lloyd/Forgy: which are basically the same, it's just the in the Forgy version
+* Lloyd/Forgy: which are basically the same, it's just that in the Forgy version
     the distribution of data is considered continuous and we must infer the
     distribution the data is following, but basically the algorithm is this one:
         * take num_clusters centers in some way:
@@ -141,6 +141,7 @@ ones are:
     euclidean distance to perform cluster assignments we use the total
     within-cluster sum of squares. But centroids are still calculated as the
     mean of data points.
+
 
 #### How does kmeans++ work?
 The sklearn implementation by default uses the Lloyd version of the algorithm,
