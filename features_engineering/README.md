@@ -401,10 +401,7 @@ f = h.transform(ds['user_id'])
 ```
 
 
-
 ### Bin Counting
-
-
 
 ## Adding Other Features with Model Stacking
 
