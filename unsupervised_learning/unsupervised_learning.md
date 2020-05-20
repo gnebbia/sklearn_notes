@@ -622,7 +622,6 @@ print("Silhouette Coefficient: %0.3f" % metrics.silhouette_score(X, labels))
 
 ## Manifold Learning to Visualize High Dimensional Data
 
-
 We have seen how principal component analysis can be used in the dimensionality
 reduction task—reducing the number of features of a dataset while maintaining the
 essential relationships between the points. While PCA is flexible, fast, and easily
@@ -693,7 +692,7 @@ in the map. Note that whilst the original algorithm uses the Euclidean
 distance between objects as the base of its similarity metric, this should 
 be changed as appropriate. 
 
-A feature of t-SNE is a tuneable parameter, “perplexity,” which says (loosely)
+A feature of t-SNE is a tuneable parameter, "perplexity" which says (loosely)
 how to balance attention between local and global aspects of your data. The parameter is,
 in a sense, a guess about the number of close neighbors each point has. The perplexity 
 value has a complex effect on the resulting pictures. The original paper says, "The performance of 
