@@ -1,7 +1,7 @@
 # Data Preprocessing
 
-* Before scaling it is a good idea to remove outliers usually.
-* In many problems we should also scale targets (outputs)
+- Before scaling it is a good idea to remove outliers usually.
+- In many problems we should also scale targets (outputs)
 
 First, some definitions. "Rescaling" a vector means to add or subtract a
 constant and then multiply or divide by a constant, as you would do to
@@ -23,8 +23,8 @@ divide by the standard deviation, thereby obtaining a "standard normal"
 random variable with mean 0 and standard deviation 1. 
 
 Standardization is composed by two operations:
-* Mean Subtraction
-* Variance Scaling
+- Mean Subtraction
+- Variance Scaling
 
 In practice we often ignore the shape of the distribution and just transform the
 data to center it by removing the mean value of each feature, then scale it by
@@ -43,7 +43,6 @@ from sklearn import preprocessing
 scaler = preprocessing.StandardScaler().fit(X_train)
 scaler.transform(X_train)    
 scaler.transform(X_test)    
-
 ```
 
 ## Scaling to a Range

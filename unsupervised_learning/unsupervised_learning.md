@@ -790,8 +790,9 @@ plt.scatter(proj[:, 0], proj[:, 1], c=target, cmap=plt.cm.get_cmap('jet', 10))
 
 ## Appendix A: Understanding the important features in clustering
 
-In order to understand the important features during clustering, we can perform
-the clustering and then treat it as a classification problem where the cluster
-assignment will be the target, at this point we can use all the techniques that
-are available for supervised learning feature selection to understand the
-importance, such as random forest feature selection or mutual information and so on.
+In order to understand the important features during clustering, we can
+perform the clustering and then treat it as a classification problem
+where the cluster assignment will be the target, at this point we can use
+all the techniques that are available for supervised learning feature
+selection to understand the importance, such as random forest feature
+selection or mutual information and so on.

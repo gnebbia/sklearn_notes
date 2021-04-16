@@ -1,4 +1,4 @@
-# Model Tuning
+# Machine Learning Model Tuning
 
 ## XGBoost  | LightGBM
 
